@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Fabricjs editor</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap v3.3.7 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" media="all" type="text/css" />
+    <!-- bootstrap-fileinput 4.4.3 -->
+    <link rel="stylesheet" href="/css/fileinput.min.css" media="all" type="text/css" />
+
+    <!-- custom stylesheet -->
+    <link rel="stylesheet" href="/css/style.css" media="all" type="text/css" />
+</head>
+
+<body>
+    <div class="container">
+        
+        <div class="row">
+            <!-- Set canvas size -->
+    		<div style="max-width: 300px;">
+    			<div class="form-group col-md-4" style="margin-right: -30px;">
+    			  <label for="canvas_width">Width:</label>
+    			  <input type="number" class="form-control" id="canvas_width" value="500"/>
+    			</div>
+    			<div class="form-group col-md-4" style="margin-right: -30px;">
+    			  <label for="canvas_height">Height:</label>
+    			  <input type="number" class="form-control" id="canvas_height" value="300"/>
+    			</div>
+    			<div class="col-md-4 set-margin-right set-to-row-height">
+    				<button id="set_canvas_size" type="button" class="btn btn-default" style="font-size: 12px;">
+    	                Set canvas size
+    	            </button>
+                </div>
+            </div>
+            
+            <div class="set-to-row-height" style="margin-left: 35px; float: left;">
+                <!-- preview canvas for json load -->
+                <button type="button" id="btn_preview" class="btn btn-warning" style="font-size: 12px;">Preview </button>
+                <!-- Generate image from canvas on the backend -->
+                <button id="btn_get_canvas_json" type="button" class="btn btn-primary" style="font-size: 12px;"><span class="glyphicon glyphicon-download"></span> Image</button>
+                <!-- Download pdf -->
+                <button id="download_pdf" type="button" class="btn btn-primary" style="font-size: 12px;"><span class="glyphicon glyphicon-download"></span> Pdf</button>
+            </div>
+        </div>
+    
+    
+        <div class="row toolbar-row">
+            <!-- Add text button -->
+            <div class="set-to-row-height set-margin-right">
+                <button id="addText" type="button" class="btn btn-success toolbar-btn" data-toggle="tooltip" title="Add text">
+                    <span class="glyphicon glyphicon-plus toolbar-icon" style="margin-left: 0;"></span>
+                </button>
+            </div>
+            <!-- Placeholder selector -->
+            <div class="set-margin-right" id="placeHolderWrapper">
+                <div class="form-group" style="margin-top: 2px;">
+                    <label for="placeholder">Placeholder:</label>
+                    <select class="form-control" id="placeholder">
+                      <option value="&#x003C;%this.name%>">Name</option>
+                      <option value="&#x003C;%this.age%>">Age</option>
+                      <option value="&#x003C;%this.jsfiddleLogo%>">Jsfiddle logo</option>
+                  </select>
+                </div>
+                <div class="set-to-row-height zero-padding-right" style="margin-right: 7px;">
+                    <button id="addPlaceholder" type="button" class="btn btn-default toolbar-btn" style="width: 50px;">
+                        Add
+                    </button>
+                </div>
+            </div>
+            <!-- Upload image button -->
+            <div class="set-to-row-height set-margin-right zero-padding-right">
+                <label class="control-label"> </label>
+                <div class="file-input file-input-new">
+                    <div class="input-group file-caption-main" data-toggle="tooltip" title="Add image">
+                        <div class="input-group-btn">
+                            <div tabindex="500" class="btn btn-primary btn-file toolbar-btn">
+                                <i class="glyphicon glyphicon-picture toolbar-icon"></i>&nbsp; <span class="hidden-xs"></span>
+                                <input id="file" type="file" class="file"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Delete objects button -->
+            <div class="set-to-row-height set-margin-right zero-padding-right">
+                <button id="deleteObjects" class="btn btn-danger toolbar-btn" type="button" data-toggle="tooltip" title="Delete object">
+                    <span class="glyphicon glyphicon-trash toolbar-icon"></span>
+                </button>
+            </div>
+            <!-- Upload background button -->
+            <div class="set-to-row-height set-margin-right zero-padding-right">
+                <label class="control-label"> </label>
+                <div class="file-input file-input-new">
+                    <div class="input-group file-caption-main" data-toggle="tooltip" title="Add background">
+                        <div class="input-group-btn">
+                            <div tabindex="500" class="btn btn-primary btn-file toolbar-btn">
+                                <i class="glyphicon glyphicon-folder-open toolbar-icon"></i>&nbsp; <span class="hidden-xs"></span>
+                                <input id="background" type="file" class="file"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Set fullscreen background -->
+            <div class="set-to-row-height set-margin-right">
+                <button id="toggle-stretch" type="button" class="btn btn-default toolbar-btn" data-toggle="tooltip" title="Fullscreen background">
+                    <span class="glyphicon glyphicon-fullscreen toolbar-icon"></span>
+                </button>
+            </div>
+            <!-- Delete background button -->
+            <div class="set-margin-right set-to-row-height" style="padding-left: 0;">
+                <button id="deleteBackground" class="btn btn-danger toolbar-btn" type="button" data-toggle="tooltip" title="Delete background">
+                    <span class="glyphicon glyphicon-remove toolbar-icon"></span>
+                </button>
+            </div>
+            <!-- Background opacity -->
+            <div class="form-group text-control-tb-item" style="margin-top: 2px;">
+                <label for="background-opacity">Background opacity:</label>
+                <input id="background-opacity" class="form-control" max="1" min="0" step="0.1" type="number" value="1"/>
+            </div>
+        </div>
+
+        <!-- Text controls -->
+        <div id="text-controls" class="row toolbar-row">
+            <!-- Font family -->
+            <div class="form-group text-control-tb-item" style="max-width: 86px;">
+                <label for="font-family">Font family:</label>
+                <select class="form-control" id="font-family">
+                  <option value="arial">Arial</option>
+                  <option selected="" value="helvetica">Helvetica</option>
+                  <option value="myriad pro">Myriad Pro</option>
+                  <option value="delicious">Delicious</option>
+                  <option value="verdana">Verdana</option>
+                  <option value="georgia">Georgia</option>
+                  <option value="courier">Courier</option>
+                  <option value="comic sans ms">Comic Sans MS</option>
+                  <option value="impact">Impact</option>
+                  <option value="monaco">Monaco</option>
+                  <option value="optima">Optima</option>
+                  <option value="hoefler text">Hoefler Text</option>
+                  <option value="plaster">Plaster</option>
+                  <option value="engagement">Engagement</option>
+              </select>
+            </div>
+            <!-- Text align -->
+            <div class="form-group text-control-tb-item" style="max-width: 80px;">
+                <label for="text-align">Text align:</label>
+                <select class="form-control" id="text-align">
+                  <option value="left">Left</option>
+                  <option value="center">Center</option>
+                  <option value="right">Right</option>
+                  <option value="justify">Justify</option>
+                </select>
+            </div>
+            <!-- Font size -->
+            <div class="form-group text-control-tb-item set-margin-right" style="max-width: 80px;">
+                <label for="text-font-size">Font size:</label>
+                <input id="text-font-size" class="form-control" max="120" min="1" step="1" type="number" value="20" />
+            </div>
+            <!-- Text color -->
+            <div class="color-picker-wrapper set-to-row-height set-margin-right text-control-tb-item">
+                <input id="text-color" data-toggle="tooltip" title="Text color" size="10" type="color" value="#000000" />
+            </div>
+            <!-- Color pickers -->
+            <div class="color-picker-wrapper set-to-row-height set-margin-right text-control-tb-item" style="padding-right: 20px;">
+                <input id="text-bg-color" size="10" type="color" data-toggle="tooltip" title="Highlight color" value="#ffffff" style="border: black 1px solid;"/>
+            </div>
+            <!-- Line height -->
+            <div class="col-md-2 form-group text-control-tb-item" style="max-width: 75px; margin-left: -2px;">
+                <label for="text-line-height">Line height:</label>
+                <input id="text-line-height" class="form-control" max="10" min="0" step="0.1" type="number" value="1.2" />
+            </div>
+            <!-- Stroke width -->
+            <div class="col-md-2 form-group text-control-tb-item" style="max-width: 80px; margin-left: -9px;">
+                <label for="text-stroke-width">Stroke width:</label>
+                <input id="text-stroke-width" class="form-control" max="5" min="0" type="number" value="1" />
+            </div>
+            <!-- Stroke color -->
+            <div class="color-picker-wrapper set-to-row-height set-margin-right text-control-tb-item" style="margin-left: -25px;">
+                <input id="text-stroke-color" type="color" value="#000000" data-toggle="tooltip" title="Stroke color" style="border: #337ab7 1px solid;"/>
+            </div>
+        </div>
+
+
+        <div class="row toolbar-row" style="margin-bottom: 15px;margin-left: 0;">
+            <!-- Text decoration buttons -->
+            <div id="text-controls-additional">
+                <button id="text-cmd-bold" type="button" class="btn btn-default" style="font-weight: bold;">B</button>
+                <button id="text-cmd-italic" type="button" class="btn btn-default" style="font-style: italic;">I</button>
+                <button id="text-cmd-underline" type="button" class="btn btn-default" style="text-decoration: underline;">U</button>
+                <button id="text-cmd-line-through" type="button" class="btn btn-default" style="text-decoration: line-through;">S</button>
+                <button id="text-cmd-overline" type="button" class="btn btn-default" style="text-decoration: overline;">O</button>
+            </div>
+            <!-- Backward & bring forward objects -->
+            <div>
+                <button id="bringToFront" type="button" class="btn btn-default text-format-img-btn" data-toggle="tooltip" title="Bring to front">
+                    <img src="/img/icons/Bring_to_Front.png" class="text-format-img"/>
+                </button>
+                <button id="sendToBack" type="button" class="btn btn-default text-format-img-btn" style="margin-left: 5px;" data-toggle="tooltip"
+                    title="Send backwards">
+                    <img src="/img/icons/Send_Backward.png" class="text-format-img"/>
+                </button>
+            </div>
+            <!-- Rotate object -->
+            <div style="margin-left: 10px;">
+                <button id="rotateBack" type="button" class="btn btn-default text-format-btn" data-toggle="tooltip" title="Rotate -15&deg;">-15&deg;</button>
+                <button id="rotate" type="button" class="btn btn-default text-format-btn" data-toggle="tooltip" title="Rotate +15&deg;">+15&deg;</button>
+            </div>
+            <!-- Barcode position -->
+            <div style="margin-left: 10px;">
+                <button id="barcodeVertical" type="button" class="btn btn-default text-format-btn" data-toggle="tooltip" title="Barcode vertical">
+                    <span class="glyphicon glyphicon glyphicon-resize-vertical"></span>
+                </button>
+                <button id="barcodeHorizontal" type="button" class="btn btn-default text-format-btn" data-toggle="tooltip" title="Barcode horizontal">
+                    <span class="glyphicon glyphicon glyphicon-resize-horizontal"></span>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Canvas -->
+        <div class="row">
+            <!-- canvas -->
+            <div class="col-md-6">
+                <canvas id="c"></canvas>
+            </div>
+            
+            <!-- canvas for json load -->
+            <div class="col-md-6" style="margin-top: -13px;">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery v2.0.0 -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- bootstrap v3.3.7 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- fabric.js v1.5 -->
+    <script src="/js/fabric.min.js"></script>
+
+    <!-- Canvas to pdf/img -->
+    <!-- jspdf v1.3.4 -->
+    <script src="/js/jspdf.min.js"></script>
+
+    <!-- ticket editor -->
+    <script src="/js/ticket-editor.js"></script>
+
+
+    <!-- Custom javascript -->
+    <script>
+        const TICKET_EDITOR_API = 'http://localhost:3000';
+        // if you want to use all the available google fonts provide your API key here:
+        //const GOOGLE_FONT_API_KEY = 'YOUR_GOOGLE_FONT_API_KEY';
+
+        // attributes json
+        // only for testing
+        var attributes = '{'
+        	+ '"name": "John Doe",'
+        	+ '"age": 29,'
+        	+ '"logos": {"jsfiddleLogo": "http://localhost:3000/img/jsfiddle-logo-white.png"},'
+        	+ '"barcode": "http://localhost:3000/img/barcode.jpg"}';
+        	
+        // initialize ticketeditor
+        // se available options in ticket-editor.js
+        var ticketEdtior = new TicketEditor(
+            "c", // canvas
+            TICKET_EDITOR_API, // node url
+            document.getElementById('canvas_width').value, // height
+	        document.getElementById('canvas_height').value, // width
+            '', // canvas' json
+            attributes, // attributes json
+            null, // google font API
+            'canvas' // canvas for preview
+        );
+
+        // insert texts
+	    var text = 'Hello, my name is <%this.name%>. I\'m <%this.age%> years old.';
+    	ticketEdtior.__canvas.add(new fabric.IText(text, {
+    		fill: '#000000',
+    	    stroke: '#000000',
+    	    strokeWidth: 0,
+    	    backgroundColor: null,
+    	    fontSize: 17,
+    	    fontFamily: 'arial',
+    	    lineHeight: 1.2,
+    	    left: 4,
+    	    top: 10
+    	}));
+    	var logo = '<%this.jsfiddleLogo%>';
+    	ticketEdtior.__canvas.add(new fabric.IText(logo, {
+    		fill: '#000000',
+    	    stroke: '#000000',
+    	    strokeWidth: 0,
+    	    backgroundColor: null,
+    	    fontSize: 17,
+    	    fontFamily: 'arial',
+    	    lineHeight: 1.2,
+    	    left: 50,
+    	    top: 60
+    	}));
+    </script>
+    
+    
+</body>

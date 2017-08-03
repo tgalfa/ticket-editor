@@ -1,0 +1,21 @@
+{
+  "name": "fabric-editor",
+  "version": "0.0.0",
+  "description": "A fabric.js editor with image upload and template engine functionalities. The canvas data can be exported into a json file and it has the ability to reprocess/redraw the canvas in the back-end. Uses a static `express` server",
+  "main": "server.js",
+  "repository": "",
+  "author": "Gergo Tar <targeri88@gmail.com>",
+  "dependencies": {
+    "async": "~0.2.8",
+    "atob": "^2.0.3",
+    "base64resize": "^1.0.0",
+    "body-parser": "^1.17.2",
+    "canvas": "^1.6.5",
+    "express": "~3.2.4",
+    "fabric": "^2.0.0-beta.3",
+    "optimist": "^0.6.1",
+    "png-js": "^0.1.1",
+    "should": "^11.2.1",
+    "validator": "^7.2.0"
+  }
+}
