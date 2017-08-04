@@ -21,8 +21,8 @@ $(document).ready(function () {
 var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes, googleFontApiKey, previewCanvas, isBarcode, imgBackEnd) {
     this.canvas = canvas;
     this.url = typeof url !== 'undefined' ? url : 'http://localhost:3000';
-    this.height = typeof height !== 'undefined' && typeof height === 'number' ? height : 300;
-    this.width = typeof width !== 'undefined' && typeof width === 'number' ? width : 500;
+    this.height = typeof height !== 'undefined' && typeof parseInt(height) === 'number' ? height : 300;
+    this.width = typeof width !== 'undefined' && typeof parseInt(width) === 'number' ? width : 500;
     this.attributes = typeof attributes !== 'undefined' ? attributes : {};
     this.googleFontApiKey = typeof googleFontApiKey !== 'undefined' ? googleFontApiKey : null;
     this.isBarcode = typeof isBarcode === 'undefined' || (typeof isBarcode !== 'undefined' && isBarcode === true) ? true : false;

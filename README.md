@@ -26,17 +26,35 @@ The following libraries are required:
   
 The editor html part can be found in the index.html. Example is included.  
   
-## Example for back-end part:  
-// canvas.json  
-var json_data = canvas.toDatalessJSON(['width', 'height']);  
-// attributes.json  
-var attributes = '{'  
-    + '"name": "John Doe",'  
-    + '"age": 29,'  
-    + '"logos": {"logo": "http://example.com/logo-white.png"},'  
-    + '"barcode": "http://example.com/barcode.jpg"'
-    + '}';  
+## Example for Front-end  
+const TICKET_EDITOR_API = 'http://localhost:3000';  
+// if you want to use all the available google fonts provide your API key here:  
+//const GOOGLE_FONT_API_KEY = 'YOUR_GOOGLE_FONT_API_KEY';  
   
+// attributes json  
+// only for testing  
+var attributes = '{'  
+&nbsp;&nbsp;&nbsp;&nbsp;+ '"name": "John Doe",'  
+&nbsp;&nbsp;&nbsp;&nbsp;+ '"age": 29,'  
+&nbsp;&nbsp;&nbsp;&nbsp;+ '"logos": {"jsfiddleLogo": "/img/jsfiddle-logo-white.png"},'  
+&nbsp;&nbsp;&nbsp;&nbsp;+ '"barcode": "/img/barcode.jpg"}';  
+    
+// initialize ticketeditor  
+// se available options in ticket-editor.js  
+var ticketEdtior = new TicketEditor(  
+&nbsp;&nbsp;&nbsp;&nbsp;"c", // canvas  
+&nbsp;&nbsp;&nbsp;&nbsp;TICKET_EDITOR_API, // node url  
+&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('canvas_height').value, // height  
+&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('canvas_width').value, // width  
+&nbsp;&nbsp;&nbsp;&nbsp;'', // canvas' json  
+&nbsp;&nbsp;&nbsp;&nbsp;attributes, // attributes json  
+&nbsp;&nbsp;&nbsp;&nbsp;null, // google font API  
+&nbsp;&nbsp;&nbsp;&nbsp;'canvas', // canvas for preview  
+&nbsp;&nbsp;&nbsp;&nbsp;true, // show barcode  
+&nbsp;&nbsp;&nbsp;&nbsp;false, // generate image in node js backend  
+);  
+  
+## Example for back-end part:  
 // ajax POST request  
 var data = 'json=' + JSON.stringify(json_data) + '&attributes=' + JSON.stringify(attributes)  + '&imgBackEnd=' + false;  
 var request = new XMLHttpRequest();  

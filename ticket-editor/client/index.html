@@ -260,16 +260,16 @@
         var attributes = '{'
         	+ '"name": "John Doe",'
         	+ '"age": 29,'
-        	+ '"logos": {"jsfiddleLogo": "http://localhost:3000/img/jsfiddle-logo-white.png"},'
-        	+ '"barcode": "http://localhost:3000/img/barcode.jpg"}';
+        	+ '"logos": {"jsfiddleLogo": "/img/jsfiddle-logo-white.png"},'
+        	+ '"barcode": "/img/barcode.jpg"}';
         	
         // initialize ticketeditor
         // se available options in ticket-editor.js
         var ticketEdtior = new TicketEditor(
             "c", // canvas
             TICKET_EDITOR_API, // node url
-            document.getElementById('canvas_width').value, // height
-	        document.getElementById('canvas_height').value, // width
+            document.getElementById('canvas_height').value, // height
+	        document.getElementById('canvas_width').value, // width
             '', // canvas' json
             attributes, // attributes json
             null, // google font API
