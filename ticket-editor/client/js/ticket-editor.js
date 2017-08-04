@@ -45,11 +45,11 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
     /**
      * Change canvas size
      */
-	document.getElementById('set_canvas_size').onclick = function(){
-		canvas.setHeight(document.getElementById('canvas_height').value);
-		canvas.setWidth(document.getElementById('canvas_width').value);
-		canvas.renderAll();
-	}
+    document.getElementById('set_canvas_size').onclick = function () {
+        canvas.setHeight(document.getElementById('canvas_height').value);
+        canvas.setWidth(document.getElementById('canvas_width').value);
+        canvas.renderAll();
+    }
 
 
     // set default state for inputs/buttons based on selected object attributes
@@ -79,89 +79,77 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
     canvas.on("selection:cleared", function (options) {
         textDecorationButtons()
     });
-    
-    
-    
+
+
+
     /**
      * Insert google webfonts
      */
-    if(this.googleFontApiKey !== null) {
+    if (this.googleFontApiKey !== null) {
         // load all google fonts
-        $.getJSON('https://www.googleapis.com/webfonts/v1/webfonts?key=' + this.googleFontApiKey, function(response) {
+        $.getJSON('https://www.googleapis.com/webfonts/v1/webfonts?key=' + this.googleFontApiKey, function (response) {
             var fonts = [];
-            
+
             response.items.forEach(function (font) {
                 fonts.push(font.family)
             });
-            
+
             addGoogleFonts(fonts);
         });
     } else {
         // default fonts array
-        var fonts = [ 'Arial', 
-    	    'Comic sans ms',
-    	    'Courgetten',
-    	    'Courier',
-    	    'Croissant+One',
-    	    'Delicious',
-    	    'Emblema+One',
-    	    'Engagement',
-    	    'Georgia',
-    	    'Graduate',
-    	    'Hammersmith+One',
-    	    'Helvetica',
-    	    'Hoefler text',
-    	    'Impact',
-    	    'Indie+Flower',
-    	    'Krona+Onen',
-    	    'Lora', 
-    	    'Monaco',
-    	    'Myriad Pro',
-    	    'Optima',
-    	    'Oswald',
-    	    'Oxygen',
-    	    'Plaster',
-    	    'Ribeye',
-    	    'Ranchers',
-    	    'Verdana'];
+        var fonts = [
+            'Courgetten',
+            'Croissant+One',
+            'Emblema+One',
+            'Graduate',
+            'Hammersmith+One',
+            'Indie+Flower',
+            'Krona+Onen',
+            'Lora',
+            'Oswald',
+            'Oxygen',
+            'Ribeye',
+            'Ranchers'
+        ];
         addGoogleFonts(fonts);
     }
-    
+
     /**
      * Include google fonts trough webfont.js
      * @param array fonts
      */
-    function addGoogleFonts(fonts){
+    function addGoogleFonts(fonts) {
         // add options to font-family select
-    	var select = document.getElementById("font-family");
-    	for(var i = 0; i < fonts.length; i++) {
-    	    var opt = fonts[i];
-    	    var el = document.createElement("option");
-    	    el.textContent = opt.replace('+', ' ');
-    	    el.value = opt;
-    	    select.appendChild(el);
-    	}
-    	
-    	// webfont.js config
-    	WebFontConfig = {
-    	    google: { 
-    	        families:  fonts,
-    	    },
-    	  	active: function() {
-        	  canvas.renderAll();
-        	}
-    	};
-    
-    	(function() {
-    	    var src = ('https:' === document.location.protocol ? 'https' : 'http') +
-    	        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    	    
-    	    $.getScript(src, function(data) {      
-    	    	canvas.renderAll();
-    	    });
-    	})();
+        var select = document.getElementById("font-family");
+        for (var i = 0; i < fonts.length; i++) {
+            var opt = fonts[i];
+            var el = document.createElement("option");
+            el.textContent = opt.replace('+', ' ');
+            el.value = opt;
+            select.appendChild(el);
+        }
+
+        // webfont.js config
+        WebFontConfig = {
+            google: {
+                families: fonts,
+            },
+            active: function () {
+                canvas.renderAll();
+            }
+        };
+
+        (function () {
+            var src = ('https:' === document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+
+            $.getScript(src, function (data) {
+                canvas.renderAll();
+            });
+        })();
     }
-    
+
 
     /**
      * Text decoration buttons state
@@ -617,20 +605,20 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
             if (request.status >= 200 && request.status < 400) {
                 // Success!
                 var data = JSON.parse(request.responseText).image;
-                
+
                 // generate & download pdf
-                if(isPdf !== undefined && isPdf === true) {
+                if (isPdf !== undefined && isPdf === true) {
                     var pdf = new jsPDF();
-                        pdf.addImage(data, 'JPEG', 0, 0);
-                        var download = document.getElementById('download_pdf');
-                        pdf.save("download.pdf");
+                    pdf.addImage(data, 'JPEG', 0, 0);
+                    var download = document.getElementById('download_pdf');
+                    pdf.save("download.pdf");
                 } else {
                     // generate & download image
                     data = base64ToArrayBuffer(data.replace(/^data:image\/[a-z]+;base64,/, ""));
                     saveByteArray([data], 'canvas.jpg');
                 }
-                
-               
+
+
             } else {
                 console.log('We reached our target server, but it returned an error');
             }
@@ -642,14 +630,14 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
 
         request.send(data);
     };
-    
+
     /**
      * Download pdf
      */
     document.getElementById('download_pdf').onclick = function () {
         saveJSON(true);
     };
-    
+
 
     /**
      * Download image
@@ -657,22 +645,22 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
     document.getElementById('btn_get_canvas_json').onclick = function () {
         saveJSON();
     };
-    
+
     /**
      * Convert base64 string to buffer
      * @param string base64
      */
     function base64ToArrayBuffer(base64) {
-        var binaryString =  window.atob(base64);
+        var binaryString = window.atob(base64);
         var binaryLen = binaryString.length;
         var bytes = new Uint8Array(binaryLen);
-        for (var i = 0; i < binaryLen; i++)        {
+        for (var i = 0; i < binaryLen; i++) {
             var ascii = binaryString.charCodeAt(i);
             bytes[i] = ascii;
         }
         return bytes;
     }
-    
+
     /**
      * Save byteArray
      */
@@ -681,7 +669,9 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
         document.body.appendChild(a);
         a.style = "display: none";
         return function (data, name) {
-            var blob = new Blob(data, {type: "octet/stream"}),
+            var blob = new Blob(data, {
+                    type: "octet/stream"
+                }),
                 url = window.URL.createObjectURL(blob);
             a.href = url;
             a.download = name;
@@ -727,7 +717,7 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
                     }
                 });
             }
-            
+
             // change object data, use TemplateEngine
             if (json_data.objects !== undefined) {
                 json_data.objects.forEach(function (obj) {
@@ -787,7 +777,7 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
             previewImage();
         };
     } else {
-         document.getElementById('btn_preview').style.display = 'none';
+        document.getElementById('btn_preview').style.display = 'none';
     }
 
 
