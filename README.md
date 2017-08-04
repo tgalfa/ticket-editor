@@ -63,16 +63,16 @@ request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; cha
 request.withCredentials = false;  
   
 request.onload = function() {  
-    if (request.status >= 200 && request.status < 400) {  
-        // Success!  
-        var data = JSON.parse(request.responseText);  
-    } else {  
-        console.log('We reached our target server, but it returned an error');  
-    }  
+&nbsp;&nbsp;&nbsp;&nbsp;if (request.status >= 200 && request.status < 400) {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Success!  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var data = JSON.parse(request.responseText);  
+&nbsp;&nbsp;&nbsp;&nbsp;} else {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('We reached our target server, but it returned an error');  
+&nbsp;&nbsp;&nbsp;&nbsp;}  
 };  
   
 request.onerror = function() {  
-    console.log('There was a connection error of some sort');  
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('There was a connection error of some sort');  
 };  
   
 request.send(data);
