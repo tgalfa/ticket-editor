@@ -51,7 +51,7 @@ var ticketEdtior = new TicketEditor(
 &nbsp;&nbsp;&nbsp;&nbsp;null, // google font API  
 &nbsp;&nbsp;&nbsp;&nbsp;'canvas', // canvas for preview  
 &nbsp;&nbsp;&nbsp;&nbsp;true, // show barcode  
-&nbsp;&nbsp;&nbsp;&nbsp;false, // generate image in node js backend  
+&nbsp;&nbsp;&nbsp;&nbsp;false // generate image in node js backend  
 );  
   
 ## Example for back-end part:  
