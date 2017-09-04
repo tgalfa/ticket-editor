@@ -592,7 +592,7 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
      */
     var saveJSON = function (isPdf) {
         // create json from canvas
-        TE.ticketJSON = typeof ticketJSON !== 'undefined' && ticketJSON !== '' ? ticketJSON : canvas.toDatalessJSON(['width', 'height']);
+        TE.ticketJSON = typeof ticketJSON !== 'undefined' && ticketJSON !== '' ? ticketJSON : canvas.toDatalessJSON(['width', 'height', 'id']);
 
         // ajax POST request
         var data = 'json=' + JSON.stringify(TE.ticketJSON) + '&attributes=' + JSON.stringify(TE.attributes) + '&imgBackEnd=' + TE.imgBackEnd;
@@ -694,7 +694,7 @@ var TicketEditor = function (canvas, url, height, width, ticketJSON, attributes,
 
         // function for preview
         var previewImage = function () {
-            var json_data = canvas.toDatalessJSON(['width', 'height']);
+            var json_data = canvas.toDatalessJSON(['width', 'height', 'id']);
             var logoUrl, // temp variable for logo urls
                 json_temp; // temp variable for canvas json
 

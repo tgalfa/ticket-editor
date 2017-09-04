@@ -72,7 +72,11 @@ global.atob = require("atob");
 router.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    var allowedOrigins = ['http://localhost:8080'];
+    var origin = req.headers.origin;
+    if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -106,7 +110,7 @@ router.post('/canvas-img', function (req, res) {
     var attributes = JSON.parse(req.body.attributes);
 
     // fabric canvas
-    var canvasFabric = fabric.createCanvasForNode(json_data.width, json_data.height);
+    var canvasFabric = fabric.createCanvasForNode(parseInt(json_data.width), parseInt(json_data.height));
 
     // parse attributes.json & set temp variable
     if (attributes !== undefined) {
@@ -128,12 +132,23 @@ router.post('/canvas-img', function (req, res) {
         });
     }
 
-    // load fabric canvas from json
-    canvasFabric.loadFromJSON(json_data, canvasFabric.renderAll.bind(canvasFabric));
+    if(json_data.width !== undefined){
+        json_data.width = parseInt(json_data.width);
+    }
+
+    if(json_data.height !== undefined){
+        json_data.height = parseInt(json_data.height);
+    }
 
     // async.series: Run multiple tasks one after another and once they are finish execute something else
     async.series(
         [
+            // load fabric canvas from json
+            function loadCanvasFromJSON(callback){
+                canvasFabric.loadFromDatalessJSON(json_data, function() {
+                    callback();
+                });
+            },
             // if background image is set to full screen in front-end use canvas size for the background image
             function setResizedBackground(callback) {
                 if (json_data.backgroundImage != undefined && json_data.backgroundImage.width == canvasFabric.width && json_data.backgroundImage.height == canvasFabric.height) {
@@ -178,8 +193,14 @@ router.post('/canvas-img', function (req, res) {
                                         left: obj.left,
                                         top: obj.top
                                     }).scale(0.4));
+                                    
+                                    // remove text object
+                                    var textObj =  getItemByAttr(canvasFabric, 'text', obj.text);
+                                    if(textObj != null) textObj.remove();
+
                                     // image added to canvas
                                     count_images++;
+                                    
                                     // callback if all the images have been added to the canvas
                                     if (count_images === images) {
                                         callback();
@@ -233,6 +254,14 @@ router.post('/canvas-img', function (req, res) {
                         } else {
                             // vertical
                             myImg.scaleToHeight(barcodeWidth);
+                        }
+                        // remove barcode group object
+                        var barcodeObj = getItemByAttr(canvasFabric, 'id', 'barcode');
+                        if(barcodeObj != null){ 
+                            barcodeObj._objects.forEach(function (object, key) {
+                                canvasFabric.remove(object);
+                                barcodeObj.removeWithUpdate(object);
+                            });
                         }
                         // add image to canvas
                         canvasFabric.add(myImg);
@@ -288,6 +317,28 @@ router.post('/canvas-img', function (req, res) {
         }
     );
 });
+
+
+
+/**
+ * Find an object of a canvas based on a given attribute name
+ * @param  Object canvas
+ * @param  string attr
+ * @param  string name
+ * @return Object
+ */
+function getItemByAttr(canvas, attr, name) {
+    var object = null,
+    objects = canvas.getObjects();
+    for (var i = 0, len = canvas.size(); i < len; i++) {
+        if (objects[i][attr] && objects[i][attr] === name) {
+            object = objects[i];
+            break;
+        }
+    }
+    return object;
+};
+
 
 
 
